@@ -27,6 +27,13 @@ const Login = ({ setAuth }) => {
     }
   };
 
+  const handleDemoLogin = () => {
+    // Demo mode - bypass backend
+    localStorage.setItem('token', 'demo-token-' + Date.now());
+    localStorage.setItem('user', JSON.stringify({ username: 'demo', role: 'Admin' }));
+    setAuth(true);
+  };
+
   const checkDbConnection = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/health`);
@@ -108,7 +115,13 @@ const Login = ({ setAuth }) => {
           </button>
         </form>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-4 space-y-3 flex flex-col">
+          <button
+            onClick={handleDemoLogin}
+            className="text-sm text-accent hover:text-emerald-300 transition-colors font-semibold underline"
+          >
+            → Quick Demo (No Backend Required)
+          </button>
           <button
             onClick={checkDbConnection}
             className="text-xs text-slate-500 hover:text-slate-400 transition-colors underline"
@@ -118,9 +131,9 @@ const Login = ({ setAuth }) => {
         </div>
         
         <div className="mt-8 text-center text-xs text-slate-500">
-          <p className="font-semibold text-slate-300">Quick Start Demo</p>
-          <p>Enter any username & password</p>
-          <p>Auto-creates user on first login</p>
+          <p className="font-semibold text-slate-300">Getting Started</p>
+          <p>Use demo login to test the dashboard</p>
+          <p>Or try real login if backend is ready</p>
         </div>
       </div>
     </div>
