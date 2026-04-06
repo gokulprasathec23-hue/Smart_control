@@ -9,21 +9,19 @@ const Login = ({ setAuth }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
   const [dbStatus, setDbStatus] = useState(null);
 
-  const handleAuth = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
     try {
-      const endpoint = isRegister ? '/api/register' : '/api/login';
-      const res = await axios.post(`${API_BASE_URL}${endpoint}`, { username, password });
+      const res = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify({ username: res.data.username, role: res.data.role }));
       setAuth(true);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+      setError(err.response?.data?.message || err.message || 'Login failed');
     } finally {
       setIsLoading(false);
     }
@@ -34,7 +32,7 @@ const Login = ({ setAuth }) => {
       const res = await axios.get(`${API_BASE_URL}/api/health`);
       setDbStatus(res.data);
     } catch (err) {
-      setDbStatus({ status: 'error', message: err.message });
+      setDbStatus({ status: 'error', message: 'Database connection failed' });
     }
   };
 
@@ -48,7 +46,7 @@ const Login = ({ setAuth }) => {
             <Settings className="w-12 h-12 text-primary animate-[spin_10s_linear_infinite]" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white mb-1">Smart Control Panel</h1>
-          <p className="text-sm text-slate-400">{isRegister ? 'Create Account' : 'Access System'}</p>
+          <p className="text-sm text-slate-400">Industrial IoT Operations</p>
         </div>
 
         {error && (
@@ -63,7 +61,7 @@ const Login = ({ setAuth }) => {
           </div>
         )}
 
-        <form onSubmit={handleAuth} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300 ml-1">Username</label>
             <div className="relative">
@@ -102,35 +100,27 @@ const Login = ({ setAuth }) => {
             {isLoading ? (
               <span className="flex items-center gap-2">
                 <Settings className="w-5 h-5 animate-spin" />
-                {isRegister ? 'Creating Account...' : 'Authenticating...'}
+                Authenticating...
               </span>
             ) : (
-              isRegister ? 'Create Account' : 'Access System'
+              'Login'
             )}
           </button>
         </form>
 
-        <div className="mt-6 flex justify-center gap-4">
-          <button
-            onClick={() => setIsRegister(!isRegister)}
-            className="text-sm text-primary hover:text-accent transition-colors"
-          >
-            {isRegister ? 'Already have an account? Login' : 'Need an account? Register'}
-          </button>
-        </div>
-
-        <div className="mt-4 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <button
             onClick={checkDbConnection}
             className="text-xs text-slate-500 hover:text-slate-400 transition-colors underline"
           >
-            Check DB Connection
+            Check Database Connection
           </button>
         </div>
         
         <div className="mt-8 text-center text-xs text-slate-500">
-          <p>Demo: Login with any credentials (auto-creates user)</p>
-          <p>Or register a new account explicitly.</p>
+          <p className="font-semibold text-slate-300">Quick Start Demo</p>
+          <p>Enter any username & password</p>
+          <p>Auto-creates user on first login</p>
         </div>
       </div>
     </div>
