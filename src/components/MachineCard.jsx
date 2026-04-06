@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Power, RotateCcw, AlertOctagon, Activity, Thermometer, Zap, Clock, Edit2, Trash2 } from 'lucide-react';
 import PerformanceChart from './PerformanceChart';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smart-backend-mu.vercel.app';
 
 const MachineCard = ({ machine, userRole, onEdit, onActionDone }) => {
   const [loadingAction, setLoadingAction] = useState(false);

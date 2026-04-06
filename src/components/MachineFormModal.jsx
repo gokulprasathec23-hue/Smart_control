@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { X, Check, Loader2 } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smart-backend-mu.vercel.app';
 
 const MachineFormModal = ({ isOpen, onClose, machineToEdit, onSave }) => {
   const [formData, setFormData] = useState({

@@ -4,7 +4,7 @@ import MachineCard from './MachineCard';
 import MachineFormModal from './MachineFormModal';
 import { LogOut, Activity, AlertTriangle, Cpu, Plus, Wifi } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smart-backend-mu.vercel.app';
 const POLL_INTERVAL = 5000; // 5 seconds — matches simulator interval
 
 const Dashboard = ({ setAuth }) => {

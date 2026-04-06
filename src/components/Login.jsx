@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Settings, Lock, User } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smart-backend-mu.vercel.app';
 
 const Login = ({ setAuth }) => {
   const [username, setUsername] = useState('');

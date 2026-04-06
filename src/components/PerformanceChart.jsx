@@ -24,7 +24,7 @@ ChartJS.register(
   Filler
 );
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smart-backend-mu.vercel.app';
 
 const PerformanceChart = ({ machineId }) => {
   const [logData, setLogData] = useState([]);
