@@ -9,20 +9,32 @@ const Login = ({ setAuth }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+  const [dbStatus, setDbStatus] = useState(null);
 
-  const handleLogin = async (e) => {
+  const handleAuth = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
+      const endpoint = isRegister ? '/api/register' : '/api/login';
+      const res = await axios.post(`${API_BASE_URL}${endpoint}`, { username, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify({ username: res.data.username, role: res.data.role }));
       setAuth(true);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'An error occurred during login');
+      setError(err.response?.data?.message || err.message || 'An error occurred');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const checkDbConnection = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/health`);
+      setDbStatus(res.data);
+    } catch (err) {
+      setDbStatus({ status: 'error', message: err.message });
     }
   };
 
@@ -36,7 +48,7 @@ const Login = ({ setAuth }) => {
             <Settings className="w-12 h-12 text-primary animate-[spin_10s_linear_infinite]" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white mb-1">Smart Control Panel</h1>
-          <p className="text-sm text-slate-400">Industrial IoT Operations Center</p>
+          <p className="text-sm text-slate-400">{isRegister ? 'Create Account' : 'Access System'}</p>
         </div>
 
         {error && (
@@ -45,7 +57,13 @@ const Login = ({ setAuth }) => {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        {dbStatus && (
+          <div className={`border text-sm p-3 rounded-lg mb-6 text-center ${dbStatus.status === 'ok' ? 'bg-green-500/10 border-green-500/50 text-green-400' : 'bg-red-500/10 border-red-500/50 text-red-400'}`}>
+            DB Status: {dbStatus.message}
+          </div>
+        )}
+
+        <form onSubmit={handleAuth} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300 ml-1">Username</label>
             <div className="relative">
@@ -84,17 +102,35 @@ const Login = ({ setAuth }) => {
             {isLoading ? (
               <span className="flex items-center gap-2">
                 <Settings className="w-5 h-5 animate-spin" />
-                Authenticating...
+                {isRegister ? 'Creating Account...' : 'Authenticating...'}
               </span>
             ) : (
-              'Access System'
+              isRegister ? 'Create Account' : 'Access System'
             )}
           </button>
         </form>
+
+        <div className="mt-6 flex justify-center gap-4">
+          <button
+            onClick={() => setIsRegister(!isRegister)}
+            className="text-sm text-primary hover:text-accent transition-colors"
+          >
+            {isRegister ? 'Already have an account? Login' : 'Need an account? Register'}
+          </button>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={checkDbConnection}
+            className="text-xs text-slate-500 hover:text-slate-400 transition-colors underline"
+          >
+            Check DB Connection
+          </button>
+        </div>
         
         <div className="mt-8 text-center text-xs text-slate-500">
-          <p>Demo Credentials: Any username / password</p>
-          <p>Auto-creates user on first login.</p>
+          <p>Demo: Login with any credentials (auto-creates user)</p>
+          <p>Or register a new account explicitly.</p>
         </div>
       </div>
     </div>
